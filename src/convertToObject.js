@@ -1,18 +1,16 @@
 'use strict';
 
 function convertToObject(sourceString) {
-  const styles = {};
-
   const cleanedString = sourceString
-    .replace(/;\s*\n\s*/g, ';\n')
+    .replace(/;\s*\n\s*/g, ';')
     .replace(/\s*:\s*/g, ':')
     .trim();
 
-  cleanedString.split(';').forEach((rule) => {
+  return cleanedString.split(';').reduce((styles, rule) => {
     const trimmedRule = rule.trim();
 
     if (trimmedRule.length === 0) {
-      return;
+      return styles;
     }
 
     const [property, ...valueParts] = trimmedRule.split(':');
@@ -23,9 +21,9 @@ function convertToObject(sourceString) {
 
       styles[propertyName] = value;
     }
-  });
 
-  return styles;
+    return styles;
+  }, {});
 }
 
 module.exports = convertToObject;
